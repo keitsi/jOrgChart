@@ -141,7 +141,7 @@
                     sourceNode.parentsUntil('.node-container')
                                .find('*')
                                .filter('.node')
-                               .droppable('disable');
+                               .droppable({ disabled: true });
                 });
 
                 // Drag stop event handler for nodes
