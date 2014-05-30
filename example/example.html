@@ -1,121 +1,83 @@
 <!DOCTYPE html>
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" />
     <title>jOrgChart - A jQuery OrgChart Plugin</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/jquery.jOrgChart.css"/>
-    <link rel="stylesheet" href="css/custom.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/jquery.jOrgChart.css" />
+    <link rel="stylesheet" href="css/custom.css" />
     <link href="css/prettify.css" type="text/css" rel="stylesheet" />
 
     <script type="text/javascript" src="prettify.js"></script>
-    
+
     <!-- jQuery includes -->
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-    
-    <script src="jquery.jOrgChart.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="jquery-ui.min.js"></script>
+    <!-- jQrg chart -->
+    <script type="text/javascript" src="jquery.jOrgChart.js"></script>
 
-    <script>
-    jQuery(document).ready(function() {
-        $("#org").jOrgChart({
-            chartElement : '#chart',
-            dragAndDrop  : true
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            var data = [
+                { name: "TE", code: "G370", key: 1, parent: 0 },
+                { name: "SSD", code: "AD60", key: 2, parent: 1 },
+                { name: "DPM", code: "AD61", key: 3, parent: 2 },
+                { name: "ESW", code: "AD62", key: 4, parent: 2 },
+                { name: "MDWD", code: "AD71", key: 5, parent: 1 },
+                { name: "MDWSS", code: "AD72", key: 6, parent: 1 }];
+
+            $("#chart").jOrgChart({
+                jsonData: data,
+                dragAndDrop: true
+            });
+
+            /* read button click */
+            $("#btn-read").click(function (e) {
+                //read json data
+                $('#json-data').text($("#chart").jOrgChart("jsonData"));
+            });
+
+            /* apply button click */
+            $("#btn-apply").click(function (e) {
+                //set json data
+                if ($('#json-data').text() != "") {
+                    $("#chart").jOrgChart("jsonData", JSON.parse($('#json-data').text()));
+                }
+            });
         });
-    });
     </script>
-  </head>
+</head>
 
-  <body onload="prettyPrint();">
+<body onload="prettyPrint();">
     <div class="topbar">
         <div class="topbar-inner">
             <div class="container">
                 <a class="brand" href="#">jQuery Organisation Chart</a>
                 <ul class="nav">
-                    <li><a href="http://github.com/wesnolte">Github</a></li>
-                    <li><a href="http://twitter.com/wesnolte">Twitter</a></li>                  
-                    <li><a href="http://th3silverlining.com">Blog</a></li>      
+                    <li><a href="https://github.com/keitsi/jOrgChart">Github</a></li>
+                    <li><a href="http://www.diandian.com/dianlog/keitsi">Blog</a></li>
                 </ul>
-                <div class="pull-right">
-                    <div class="alert-message info" id="show-list">Show underlying list.</div>
-                    
-<pre class="prettyprint lang-html" id="list-html" style="display:none"></pre>       
-                </div>              
             </div>
         </div>
     </div>
-    
-    <ul id="org" style="display:none">
-    <li>
-       Food
-       <ul>
-         <li id="beer">Beer</li>
-         <li>Vegetables
-           <a href="http://wesnolte.com" target="_blank">Click me</a>
-           <ul>
-             <li>Pumpkin</li>
-             <li>
-                <a href="http://tquila.com" target="_blank">Aubergine</a>
-                <p>A link and paragraph is all we need.</p>
-             </li>
-           </ul>
-         </li>
-         <li class="fruit">Fruit
-           <ul>
-             <li>Apple
-               <ul>
-                 <li>Granny Smith</li>
-               </ul>
-             </li>
-             <li>Berries
-               <ul>
-                 <li>Blueberry</li>
-                 <li><img src="images/raspberry.jpg" alt="Raspberry"/></li>
-                 <li>Cucumber</li>
-               </ul>
-             </li>
-           </ul>
-         </li>
-         <li>Bread</li>
-         <li class="collapsed">Chocolate
-           <ul>
-             <li>Topdeck</li>
-             <li>Reese's Cups</li>
-           </ul>
-         </li>
-       </ul>
-     </li>
-   </ul>            
-    
-    <div id="chart" class="orgChart"></div>
-    
-    <script>
-        jQuery(document).ready(function() {
-            
-            /* Custom jQuery for the example */
-            $("#show-list").click(function(e){
-                e.preventDefault();
-                
-                $('#list-html').toggle('fast', function(){
-                    if($(this).is(':visible')){
-                        $('#show-list').text('Hide underlying list.');
-                        $(".topbar").fadeTo('fast',0.9);
-                    }else{
-                        $('#show-list').text('Show underlying list.');
-                        $(".topbar").fadeTo('fast',1);                  
-                    }
-                });
-            });
-            
-            $('#list-html').text($('#org').html());
-            
-            $("#org").bind("DOMSubtreeModified", function() {
-                $('#list-html').text('');
-                
-                $('#list-html').text($('#org').html());
-                
-                prettyPrint();                
-            });
-        });
-    </script>
 
+    <div class="container">
+        <div class="row-fluid">
+            <div class="span8 offset2">
+                <div id="chart"></div>
+
+                <div style="margin: 20px; float: left;">
+                    <h2>Json Data:</h2>
+                    <p>
+                        <textarea id="json-data" rows="10" style="width: 500px;"></textarea>
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <button id="btn-read" class="alert-message info">Read</button>
+                        <button id="btn-apply" class="alert-message info">Apply</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
